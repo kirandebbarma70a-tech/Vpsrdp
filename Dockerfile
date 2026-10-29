@@ -2,6 +2,11 @@ FROM debian:bullseye
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+# पुराने Bullseye के लिए Archive sources सेट करना ताकि 404 एरर न आए
+RUN echo "deb http://archive.debian.org/debian/ bullseye main contrib non-free" > /etc/apt/sources.list && \
+    echo "deb http://archive.debian.org/debian-security/ bullseye-security main contrib non-free" >> /etc/apt/sources.list && \
+    echo "Acquire::Check-Valid-Time \"false\";" > /etc/apt/apt.conf.d/99no-check-valid-time
+
 RUN dpkg --add-architecture i386
 
 RUN apt update && apt install -y \
