@@ -9,6 +9,7 @@ RUN echo "deb http://archive.debian.org/debian/ bullseye main contrib non-free" 
 
 RUN dpkg --add-architecture i386
 
+# यहाँ हमने nodejs और npm को भी जोड़ दिया है ताकि LocalTunnel चल सके
 RUN apt update && apt install -y \
     xrdp \
     xfce4 \
@@ -25,7 +26,9 @@ RUN apt update && apt install -y \
     pulseaudio-utils \
     wine \
     wine32 \
-    firefox-esr && \
+    firefox-esr \
+    nodejs \
+    npm && \
     apt clean && rm -rf /var/lib/apt/lists/*
 
 # Set root password
