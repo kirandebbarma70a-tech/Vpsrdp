@@ -18,6 +18,7 @@ RUN apt update && apt install -y \
     policykit-1 \
     pulseaudio \
     pulseaudio-utils \
+    openssh-client \
     wine \
     wine32 \
     firefox-esr && \
