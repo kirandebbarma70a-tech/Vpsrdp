@@ -1,19 +1,24 @@
 #!/bin/bash
 
-# 1. Dbus और PulseAudio को शुरू करना
-service dbus start
-pulseaudio --start --system --disallow-exit --disable-shm
+# 1. D-Bus को सीधे बैकग्राउंड में चलाना (बिना 'service' कमांड के)
+dbus-daemon --system --fork
 
-# 2. XRDP सर्विस को शुरू करना
-service xrdp start
+# 2. PulseAudio को शुरू करना (अगर इंस्टॉल है)
+pulseaudio --start --system --disallow-exit --disable-shm || true
 
-# 3. X11 socket directory permissions सही करना
+# 3. XRDP और Sesman को सीधे बाइनरी से शुरू करना
+xrdp-sesman
+xrdp
+
+# 4. X11 socket directory permissions सही करना
 mkdir -p /tmp/.X11-unix
 chmod 1777 /tmp/.X11-unix
 
-# 4. Pinggy का TCP टनल बैकग्राउंड में चलाना ताकि RDP पोर्ट (3389) बाहर मिल जाए
+# 5. Pinggy का TCP टनल बैकग्राउंड में चलाना (सुनिश्चित करें कि openssh-client इंस्टॉल हो)
 echo "Starting Pinggy TCP tunnel for RDP..."
 ssh -o StrictHostKeyChecking=no -p 443 -R 0:localhost:3389 a.pinggy.io &
 
-# 5. XRDP के लॉग्स देखने के साथ-साथ कंटेनर को जिंदा रखने के लिए
+# 6. लॉग फाइल बनाना और उसे ट्रैक करना
+mkdir -p /var/log
+touch /var/log/xrdp-sesman.log
 tail -f /var/log/xrdp-sesman.log
