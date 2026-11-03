@@ -2,14 +2,8 @@ FROM debian:bullseye
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# पुराने Bullseye के लिए Archive sources सेट करना ताकि 404 एरर न आए
-RUN echo "deb http://archive.debian.org/debian/ bullseye main contrib non-free" > /etc/apt/sources.list && \
-    echo "deb http://archive.debian.org/debian-security/ bullseye-security main contrib non-free" >> /etc/apt/sources.list && \
-    echo "Acquire::Check-Valid-Time \"false\";" > /etc/apt/apt.conf.d/99no-check-valid-time
-
 RUN dpkg --add-architecture i386
 
-# यहाँ हमने nodejs और npm को भी जोड़ दिया है ताकि LocalTunnel चल सके
 RUN apt update && apt install -y \
     xrdp \
     xfce4 \
@@ -26,9 +20,7 @@ RUN apt update && apt install -y \
     pulseaudio-utils \
     wine \
     wine32 \
-    firefox-esr \
-    nodejs \
-    npm && \
+    firefox-esr && \
     apt clean && rm -rf /var/lib/apt/lists/*
 
 # Set root password
